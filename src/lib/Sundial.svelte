@@ -258,26 +258,17 @@
 		const gnomonGroup = new THREE.Group();
 
 		const gnomonHeight = 4.0;
-		const gnomonThickness = 0.08;
-		const gnomonBaseWidth = 0.6;
+		const gnomonTopRadius = 0.06;
+		const gnomonBottomRadius = 0.12;
 
-		const shape = new THREE.Shape();
-		shape.moveTo(-gnomonBaseWidth / 2, 0);
-		shape.lineTo(gnomonBaseWidth / 2, 0);
-		shape.lineTo(0, gnomonHeight);
-		shape.closePath();
-
-		const extrudeSettings = {
-			steps: 1,
-			depth: gnomonThickness,
-			bevelEnabled: true,
-			bevelThickness: 0.01,
-			bevelSize: 0.01,
-			bevelSegments: 2
-		};
-
-		const gnomonGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-		gnomonGeometry.center();
+		const gnomonGeometry = new THREE.CylinderGeometry(
+			gnomonTopRadius,
+			gnomonBottomRadius,
+			gnomonHeight,
+			24,
+			1,
+			false
+		);
 
 		const gnomonMaterial = new THREE.MeshStandardMaterial({
 			color: 0x1a1a1a,
@@ -287,21 +278,18 @@
 		const gnomon = new THREE.Mesh(gnomonGeometry, gnomonMaterial);
 
 		gnomon.position.y = 2.96 + gnomonHeight / 2;
-		gnomon.position.z = 0;
-		gnomon.rotation.y = Math.PI / 2;
 		gnomon.castShadow = true;
 		gnomon.receiveShadow = true;
 		gnomonGroup.add(gnomon);
 
-		const tipGeometry = new THREE.ConeGeometry(0.06, 0.2, 16);
+		const tipGeometry = new THREE.ConeGeometry(0.08, 0.25, 24);
 		const tipMaterial = new THREE.MeshStandardMaterial({
 			color: 0xffd700,
 			roughness: 0.2,
 			metalness: 0.8
 		});
 		const tip = new THREE.Mesh(tipGeometry, tipMaterial);
-		tip.position.y = 2.96 + gnomonHeight + 0.1;
-		tip.position.z = 0;
+		tip.position.y = 2.96 + gnomonHeight + 0.125;
 		tip.castShadow = true;
 		gnomonGroup.add(tip);
 
