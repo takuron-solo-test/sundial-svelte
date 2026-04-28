@@ -307,10 +307,11 @@
 			const hour = i;
 			const angle = ((hour - 12) * 15 * Math.PI) / 180;
 
+			const isNoon = hour === 12;
+			const isMidnight = hour === 0;
 			const isMainHour = hour % 3 === 0;
-			const isQuarterHour = hour % 6 === 0;
-			let lineLength = isQuarterHour ? 0.5 : (isMainHour ? 0.35 : 0.2);
-			let lineWidth = isQuarterHour ? 0.06 : (isMainHour ? 0.04 : 0.02);
+			let lineLength = isNoon ? 0.6 : (isMainHour ? 0.45 : 0.25);
+			let lineWidth = isNoon ? 0.08 : (isMainHour ? 0.05 : 0.025);
 
 			const lineGeometry = new THREE.BoxGeometry(lineWidth, 0.02, lineLength);
 			const lineMaterial = new THREE.MeshStandardMaterial({
@@ -320,21 +321,20 @@
 
 			const radius = (markerInnerRadius + markerOuterRadius) / 2;
 			line.position.x = Math.sin(angle) * radius;
-			line.position.z = -Math.cos(angle) * radius;
+			line.position.z = Math.cos(angle) * radius;
 			line.rotation.y = -angle;
 
 			hourMarkersGroup.add(line);
 
-			if (isQuarterHour) {
+			if (isMainHour && !isMidnight) {
 				let displayHour = hour;
 				if (displayHour > 12) displayHour -= 12;
-				if (displayHour === 0) displayHour = 0;
 				
 				const hourText = createTextSprite(displayHour.toString());
 				if (hourText) {
-					const textRadius = markerInnerRadius - 0.4;
+					const textRadius = markerInnerRadius - 0.35;
 					hourText.position.x = Math.sin(angle) * textRadius;
-					hourText.position.z = -Math.cos(angle) * textRadius;
+					hourText.position.z = Math.cos(angle) * textRadius;
 					hourText.position.y = 0.05;
 					
 					hourText.rotation.x = -Math.PI / 2;
@@ -449,14 +449,14 @@
 			(Math.cos(altitude) * Math.cos(latitudeRad));
 		let azimuth = Math.acos(Math.max(-1, Math.min(1, cosAzimuth)));
 		
-		if (hourAngle > 0) {
+		if (hourAngle < 0) {
 			azimuth = -azimuth;
 		}
 
 		const sunDistance = 100;
-		const sunX = sunDistance * Math.sin(azimuth) * Math.cos(altitude);
+		const sunX = -sunDistance * Math.sin(azimuth) * Math.cos(altitude);
 		const sunY = sunDistance * Math.sin(altitude);
-		const sunZ = sunDistance * Math.cos(azimuth) * Math.cos(altitude);
+		const sunZ = -sunDistance * Math.cos(azimuth) * Math.cos(altitude);
 
 		sunLight.position.set(sunX, sunY, sunZ);
 		sunLight.target.position.set(0, 3, 0);
