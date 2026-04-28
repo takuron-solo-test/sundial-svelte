@@ -258,16 +258,13 @@
 		const gnomonGroup = new THREE.Group();
 
 		const gnomonHeight = 4.0;
-		const gnomonTopRadius = 0.06;
-		const gnomonBottomRadius = 0.12;
+		const gnomonTopRadius = 0.02;
+		const gnomonBottomRadius = 0.15;
 
-		const gnomonGeometry = new THREE.CylinderGeometry(
-			gnomonTopRadius,
+		const gnomonGeometry = new THREE.ConeGeometry(
 			gnomonBottomRadius,
 			gnomonHeight,
-			24,
-			1,
-			false
+			32
 		);
 
 		const gnomonMaterial = new THREE.MeshStandardMaterial({
@@ -278,18 +275,20 @@
 		const gnomon = new THREE.Mesh(gnomonGeometry, gnomonMaterial);
 
 		gnomon.position.y = 2.96 + gnomonHeight / 2;
+		gnomon.rotation.x = Math.PI;
 		gnomon.castShadow = true;
 		gnomon.receiveShadow = true;
 		gnomonGroup.add(gnomon);
 
-		const tipGeometry = new THREE.ConeGeometry(0.08, 0.25, 24);
+		const tipGeometry = new THREE.ConeGeometry(0.06, 0.3, 32);
 		const tipMaterial = new THREE.MeshStandardMaterial({
 			color: 0xffd700,
 			roughness: 0.2,
 			metalness: 0.8
 		});
 		const tip = new THREE.Mesh(tipGeometry, tipMaterial);
-		tip.position.y = 2.96 + gnomonHeight + 0.125;
+		tip.position.y = 2.96 + gnomonHeight + 0.15;
+		tip.rotation.x = Math.PI;
 		tip.castShadow = true;
 		gnomonGroup.add(tip);
 
@@ -310,6 +309,13 @@
 			const isNoon = hour === 12;
 			const isMidnight = hour === 0;
 			const isMainHour = hour % 3 === 0;
+			
+			const isNightHour = hour >= 20 || hour <= 4;
+
+			if (isNightHour) {
+				continue;
+			}
+
 			let lineLength = isNoon ? 0.6 : (isMainHour ? 0.45 : 0.25);
 			let lineWidth = isNoon ? 0.08 : (isMainHour ? 0.05 : 0.025);
 
