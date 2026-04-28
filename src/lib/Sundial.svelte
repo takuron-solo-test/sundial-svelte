@@ -174,7 +174,7 @@
 		sunLight.shadow.camera.bottom = -20;
 		sunLight.shadow.bias = -0.0005;
 		sunLight.shadow.normalBias = 0.02;
-		sunLight.shadow.radius = 1.0;
+		sunLight.shadow.radius = 0.0;
 		
 		scene.add(sunLight);
 
@@ -258,13 +258,16 @@
 		const gnomonGroup = new THREE.Group();
 
 		const gnomonHeight = 4.0;
-		const gnomonTopRadius = 0.02;
-		const gnomonBottomRadius = 0.15;
+		const gnomonTopRadius = 0.06;
+		const gnomonBottomRadius = 0.12;
 
-		const gnomonGeometry = new THREE.ConeGeometry(
+		const gnomonGeometry = new THREE.CylinderGeometry(
+			gnomonTopRadius,
 			gnomonBottomRadius,
 			gnomonHeight,
-			32
+			24,
+			1,
+			false
 		);
 
 		const gnomonMaterial = new THREE.MeshStandardMaterial({
@@ -275,20 +278,18 @@
 		const gnomon = new THREE.Mesh(gnomonGeometry, gnomonMaterial);
 
 		gnomon.position.y = 2.96 + gnomonHeight / 2;
-		gnomon.rotation.x = Math.PI;
 		gnomon.castShadow = true;
 		gnomon.receiveShadow = true;
 		gnomonGroup.add(gnomon);
 
-		const tipGeometry = new THREE.ConeGeometry(0.06, 0.3, 32);
+		const tipGeometry = new THREE.ConeGeometry(0.08, 0.25, 24);
 		const tipMaterial = new THREE.MeshStandardMaterial({
 			color: 0xffd700,
 			roughness: 0.2,
 			metalness: 0.8
 		});
 		const tip = new THREE.Mesh(tipGeometry, tipMaterial);
-		tip.position.y = 2.96 + gnomonHeight + 0.15;
-		tip.rotation.x = Math.PI;
+		tip.position.y = 2.96 + gnomonHeight + 0.125;
 		tip.castShadow = true;
 		gnomonGroup.add(tip);
 
@@ -328,7 +329,7 @@
 			const radius = (markerInnerRadius + markerOuterRadius) / 2;
 			line.position.x = Math.sin(angle) * radius;
 			line.position.z = Math.cos(angle) * radius;
-			line.rotation.y = -angle;
+			line.rotation.y = angle;
 
 			hourMarkersGroup.add(line);
 
